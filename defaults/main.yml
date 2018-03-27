@@ -102,8 +102,19 @@ barbican_git_install_branch: master
 barbican_developer_constraints:
   - "git+{{ barbican_git_repo }}@{{ barbican_git_install_branch }}#egg=barbican"
 
+# TODO(odyssey4me):
+# This can be simplified once all the roles are using
+# python_venv_build. We can then switch to using a
+# set of constraints in pip.conf inside the venv,
+# perhaps prepared by giving a giving a list of
+# constraints to the role.
+barbican_pip_install_args: >-
+  {{ barbican_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
+  {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''), '') }}
+  {{ pip_install_options | default('') }}
+
 # Name of the virtual env to deploy into
-barbican_venv_tag: untagged
+barbican_venv_tag: "{{ venv_tag | default('untagged') }}"
 barbican_bin: "{{ _barbican_bin }}"
 
 # venv_download, even when true, will use the fallback method of building the
