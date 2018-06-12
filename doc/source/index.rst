@@ -25,7 +25,7 @@ This role requires the following variables to be defined:
 
     barbican_galera_address
     barbican_galera_password
-    barbican_rabbitmq_password
+    barbican_oslomsg_rpc_password
     barbican_service_password
     keystone_admin_user_name
     keystone_auth_admin_password
