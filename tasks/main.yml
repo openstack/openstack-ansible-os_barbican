@@ -41,15 +41,15 @@
   tags:
     - always
 
-- include: barbican_pre_install.yml
+- include_tasks: barbican_pre_install.yml
   tags:
     - barbican-install
 
-- include: barbican_install.yml
+- include_tasks: barbican_install.yml
   tags:
     - barbican-install
 
-- include: barbican_post_install.yml
+- include_tasks: barbican_post_install.yml
   tags:
     - barbican-config
 
@@ -99,13 +99,13 @@
     - common-mq
     - barbican-config
 
-- include: barbican_db_setup.yml
+- include_tasks: barbican_db_setup.yml
   when:
     - inventory_hostname == groups['barbican_all'][0]
   tags:
     - barbican-config
 
-- include: barbican_service_setup.yml
+- include_tasks: barbican_service_setup.yml
   when:
     - inventory_hostname == groups['barbican_all'][0]
   tags:
