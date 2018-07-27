@@ -57,13 +57,33 @@
   tags:
     - barbican-config
 
+- include_tasks: mq_setup.yml
+  when:
+    - inventory_hostname == groups['barbican_all'][0]
+  with_items:
+    - oslomsg_setup_host: "{{ barbican_oslomsg_rpc_setup_host }}"
+      oslomsg_userid: "{{ barbican_oslomsg_rpc_userid }}"
+      oslomsg_password: "{{ barbican_oslomsg_rpc_password }}"
+      oslomsg_vhost: "{{ barbican_oslomsg_rpc_vhost }}"
+      oslomsg_transport: "{{ barbican_oslomsg_rpc_transport }}"
+    - oslomsg_setup_host: "{{ barbican_oslomsg_notify_setup_host }}"
+      oslomsg_userid: "{{ barbican_oslomsg_notify_userid }}"
+      oslomsg_password: "{{ barbican_oslomsg_notify_password }}"
+      oslomsg_vhost: "{{ barbican_oslomsg_notify_vhost }}"
+      oslomsg_transport: "{{ barbican_oslomsg_notify_transport }}"
+  no_log: true
+  tags:
+    - barbican-config
+
 - include: barbican_db_setup.yml
-  when: inventory_hostname == groups['barbican_all'][0]
+  when:
+    - inventory_hostname == groups['barbican_all'][0]
   tags:
     - barbican-config
 
 - include: barbican_service_setup.yml
-  when: inventory_hostname == groups['barbican_all'][0]
+  when:
+    - inventory_hostname == groups['barbican_all'][0]
   tags:
     - barbican-config
 
