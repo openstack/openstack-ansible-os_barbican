@@ -53,9 +53,33 @@
   tags:
     - barbican-config
 
-- include: barbican_init.yml
+- name: Run the systemd service role
+  include_role:
+    name: systemd_service
+    private: true
+  vars:
+    systemd_user_name: "{{ barbican_system_user_name }}"
+    systemd_group_name: "{{ barbican_system_group_name }}"
+    systemd_service_restart_changed: false
+    systemd_tempd_prefix: openstack
+    systemd_slice_name: barbican
+    systemd_lock_path: /var/lock/barbican
+    systemd_CPUAccounting: true
+    systemd_BlockIOAccounting: true
+    systemd_MemoryAccounting: true
+    systemd_TasksAccounting: true
+    systemd_services:
+      - service_name: "{{ service_var.service_name }}"
+        enabled: true
+        execstarts: "{{ service_var.execstarts }}"
+        execreloads: "{{ service_var.execreloads | default([]) }}"
+        config_overrides: "{{ service_var.init_config_overrides }}"
+  with_items: "{{ filtered_barbican_services }}"
+  loop_control:
+    loop_var: service_var
   tags:
     - barbican-config
+    - systemd-service
 
 - include_tasks: mq_setup.yml
   when:

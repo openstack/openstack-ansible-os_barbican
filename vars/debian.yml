@@ -16,19 +16,22 @@ barbican_distro_packages:
   - git
 
 barbican_devel_distro_packages:
-  - python-dev
-  - libssl-dev
-  - libpq-dev
+  - build-essential
+  - gettext
   - git
   - libffi-dev
-  - gettext
-  - build-essential
+  - libpq-dev
+  - libssl-dev
+  - libsystemd-dev
+  - python-dev
 
 barbican_service_distro_packages:
   - barbican-api
   - barbican-keystone-listener
   - barbican-worker
   - python-pymysql # needed by /usr/bin/barbican-manage db upgrade.
+  - python-systemd
+  - python3-systemd
   - uwsgi
   - uwsgi-plugin-python
 

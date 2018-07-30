@@ -21,6 +21,8 @@ barbican_devel_distro_packages:
   - libopenssl-devel
   - postgresql-devel
   - python-devel
+  - pkg-config
+  - systemd-devel
 
 barbican_service_distro_packages:
   - openstack-barbican
@@ -28,6 +30,7 @@ barbican_service_distro_packages:
   - openstack-barbican-keystone-listener
   - openstack-barbican-retry
   - openstack-barbican-worker
+  - python-systemd
   - uwsgi
   - uwsgi-python
 

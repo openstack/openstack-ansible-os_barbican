@@ -1,11 +1,12 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
+use_journal = True
 # Disable stderr logging
 use_stderr = False
 # Show debugging output in logs (sets DEBUG log level output)
 debug = {{ debug }}
-
+use_json = {{ debug }}
 # Address to bind the API server
 bind_host = 0.0.0.0
 
@@ -16,10 +17,6 @@ bind_port = 9311
 #  Note: Typically this would be the load balanced endpoint that clients would use
 #  communicate back with this service.
 host_href = {{ barbican_service_publicurl }}
-
-# Log to this file. Make sure you do not set the same log
-# file for both the API and registry servers!
-#log_file = /var/log/barbican/api.log
 
 # Backlog requests when creating socket
 backlog = 4096

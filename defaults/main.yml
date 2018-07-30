@@ -38,7 +38,6 @@ barbican_system_user_name: barbican
 barbican_system_user_comment: Barbican System User
 barbican_system_user_shell: /bin/false
 barbican_system_user_home: "/var/lib/{{ barbican_system_user_name }}"
-barbican_log_directory: /var/log/barbican
 barbican_etc_directory: /etc/barbican
 barbican_vassals_directory: "{{ barbican_etc_directory }}/vassals"
 
@@ -47,8 +46,19 @@ barbican_api_program_name: barbican-api
 barbican_keystone_listener_program_name: barbican-keystone-listener
 barbican_worker_program_name: barbican-worker
 barbican_retry_program_name: barbican-retry
-barbican_uwsgi_program_name: uwsgi
-barbican_uwsgi_options: "--master --die-on-term --emperor {{ barbican_vassals_directory }}"
+
+## Service Name-Group Mapping
+barbican_services:
+  barbican:
+    group: barbican_all
+    service_name: barbican
+    init_config_overrides: "{{ barbican_init_config_overrides }}"
+    execstarts: >-
+      {{ barbican_uwsgi_bin }}/uwsgi
+      --master
+      --die-on-term
+      --emperor {{ barbican_vassals_directory }}
+    start_order: 1
 
 ## Service Type and Data
 barbican_service_name: barbican
@@ -74,6 +84,7 @@ barbican_service_publicurl: "{{ barbican_service_publicuri_proto }}://{{ externa
 barbican_service_internalurl: "{{ barbican_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ barbican_service_port }}"
 barbican_service_adminurl: "{{ barbican_service_adminuri_proto }}://{{ internal_lb_vip_address }}:{{ barbican_service_port }}"
 
+barbican_init_config_overrides: {}
 barbican_config_overrides: {}
 barbican_policy_overrides: {}
 barbican_paste_overrides: {}
@@ -168,6 +179,7 @@ barbican_pip_packages:
   - osprofiler
   - PyMySQL
   - python-memcached
+  - systemd-python
   - uwsgi
 
 # This variable is used by the repo_build process to determine
