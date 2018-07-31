@@ -15,17 +15,10 @@
 
 barbican_galera_password: SuperSecrete
 barbican_developer_mode: true
-barbican_galera_address: "{{ hostvars[groups['galera_all'][0]]['ansible_host'] }}"
-barbican_galera_database: barbican
+barbican_galera_address: "{{ test_galera_host }}"
 barbican_keystone_auth: yes
-barbican_oslomsg_rpc_vhost: /barbican
-barbican_oslomsg_rpc_userid: barbican
 barbican_oslomsg_rpc_password: secrete
-barbican_oslomsg_notify_vhost: "{{ barbican_oslomsg_rpc_vhost }}"
-barbican_oslomsg_notify_userid: "{{ barbican_oslomsg_rpc_userid }}"
-barbican_oslomsg_notify_password: "{{ barbican_oslomsg_rpc_password }}"
 barbican_service_password: secrete
-barbican_venv_tag: testing
 
 barbican_service_publicurl: "http://{{ hostvars[groups['barbican_all'][0]]['ansible_host'] }}:9311"
 barbican_service_internalurl: "{{ barbican_service_publicurl }}"
