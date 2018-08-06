@@ -1,3 +1,4 @@
+---
 - name: Install barbican server
   hosts: barbican_all
   user: root
