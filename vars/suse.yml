@@ -35,4 +35,9 @@ barbican_service_distro_packages:
   - uwsgi
   - uwsgi-python
 
+barbican_oslomsg_amqp1_distro_packages:
+  - cyrus-sasl
+  - cyrus-sasl-plain
+  - cyrus-sasl-digestmd5
+
 barbican_uwsgi_bin: '/usr/sbin'

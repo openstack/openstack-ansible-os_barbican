@@ -41,7 +41,7 @@ barbican_system_user_home: "/var/lib/{{ barbican_system_user_name }}"
 barbican_etc_directory: /etc/barbican
 barbican_vassals_directory: "{{ barbican_etc_directory }}/vassals"
 
-#Aodh services info
+#Barbican services info
 barbican_api_program_name: barbican-api
 barbican_keystone_listener_program_name: barbican-keystone-listener
 barbican_worker_program_name: barbican-worker
