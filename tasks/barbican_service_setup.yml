@@ -59,6 +59,7 @@
         cloud: default
         state: present
         name: "{{ item }}"
+        endpoint_type: admin
         verify: "{{ not keystone_service_adminuri_insecure }}"
       with_items: "{{ barbican_default_role_names }}"
       register: barbican_roles
