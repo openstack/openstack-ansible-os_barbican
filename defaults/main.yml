@@ -96,7 +96,7 @@ barbican_developer_mode: false
 
 ## The git source/branch
 barbican_git_repo: "https://git.openstack.org/openstack/barbican"
-barbican_git_install_branch: master
+barbican_git_install_branch: 'stable/rocky'
 
 ## The packages to build from source (used in developer mode)
 barbican_developer_constraints:
