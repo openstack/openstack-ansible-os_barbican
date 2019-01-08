@@ -27,10 +27,6 @@
       destination: "{{ barbican_etc_directory }}/barbican.conf"
       config_overrides: "{{ barbican_config_overrides }}"
       config_type: "ini"
-    - source: "policy.json.j2"
-      destination: "{{ barbican_etc_directory }}/policy.json"
-      config_overrides: "{{ barbican_policy_overrides }}"
-      config_type: "json"
     - source: "barbican-api-paste.ini.j2"
       destination: "{{ barbican_etc_directory }}/barbican-api-paste.ini"
       config_overrides: "{{ barbican_paste_overrides }}"
@@ -44,3 +40,10 @@
       config_overrides: "{{ barbican_vassals_api_overrides }}"
       config_type: "ini"
   notify: Restart barbican services
+
+- name: Implement policy.json if there are overrides configured
+  copy:
+    content: "{{ barbican_policy_overrides | to_nice_json }}"
+    dest: "{{ barbican_etc_directory }}/policy.json"
+  when:
+    - barbican_policy_overrides != {}
