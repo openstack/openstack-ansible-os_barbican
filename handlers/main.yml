@@ -21,3 +21,12 @@
   with_items: "{{ filtered_barbican_services }}"
   listen:
     - "venv changed"
+
+- name: Remove legacy policy.json file
+  file:
+    path: "/etc/barbican/policy.json"
+    state: absent
+  when:
+    - barbican_policy_overrides == {}
+  listen:
+    - Restart barbican services
