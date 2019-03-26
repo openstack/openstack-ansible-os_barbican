@@ -92,37 +92,19 @@ barbican_paste_overrides: {}
 barbican_api_audit_map_overrides: {}
 barbican_vassals_api_overrides: {}
 
-## Toggle developer mode
-barbican_developer_mode: false
-
 ## The git source/branch
 barbican_git_repo: "https://git.openstack.org/openstack/barbican"
 barbican_git_install_branch: master
-
-## The packages to build from source (used in developer mode)
-barbican_developer_constraints:
+barbican_upper_constraints_url: "{{ requirements_git_url | default('https://git.openstack.org/cgit/openstack/requirements/plain/upper-constraints.txt?h=' ~ requirements_git_install_branch | default('master')) }}"
+barbican_git_constraints:
   - "git+{{ barbican_git_repo }}@{{ barbican_git_install_branch }}#egg=barbican"
+  - "--constraint {{ barbican_upper_constraints_url }}"
 
-# TODO(odyssey4me):
-# This can be simplified once all the roles are using
-# python_venv_build. We can then switch to using a
-# set of constraints in pip.conf inside the venv,
-# perhaps prepared by giving a giving a list of
-# constraints to the role.
-barbican_pip_install_args: >-
-  {{ barbican_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-  {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''), '') }}
-  {{ pip_install_options | default('') }}
+barbican_pip_install_args: "{{ pip_install_options | default('') }}"
 
 # Name of the virtual env to deploy into
 barbican_venv_tag: "{{ venv_tag | default('untagged') }}"
 barbican_bin: "{{ _barbican_bin }}"
-
-# venv_download, even when true, will use the fallback method of building the
-# venv from scratch if the venv download fails.
-barbican_venv_download: "{{ not barbican_developer_mode | bool }}"
-# URL of the pre-built virtualenv
-barbican_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/barbican.tgz
 
 # Database vars
 barbican_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
@@ -197,6 +179,7 @@ barbican_pip_packages:
   - python-memcached
   - systemd-python
   - uwsgi
+barbican_user_pip_packages: []
 
 barbican_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]

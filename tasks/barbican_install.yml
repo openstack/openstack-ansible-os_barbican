@@ -36,6 +36,21 @@
   retries: 5
   delay: 2
 
-- name: Install barbican packages from PIP
-  include_tasks: barbican_install_source.yml
+- name: Install the python venv
+  import_role:
+    name: "python_venv_build"
+  vars:
+    venv_build_constraints: "{{ barbican_git_constraints }}"
+    venv_build_distro_package_list: "{{ barbican_devel_distro_packages }}"
+    venv_install_destination_path: "{{ barbican_bin | dirname }}"
+    venv_install_distro_package_list: "{{ barbican_distro_packages }}"
+    venv_pip_install_args: "{{ barbican_pip_install_args }}"
+    venv_pip_packages: >-
+      {{ barbican_pip_packages |
+           union(barbican_user_pip_packages) |
+             union(((barbican_oslomsg_amqp1_enabled | bool) | ternary(barbican_optional_oslomsg_amqp1_pip_packages, []))) }}
+    venv_facts_when_changed:
+      - section: "barbican"
+        option: "venv_tag"
+        value: "{{ barbican_venv_tag }}"
   when: barbican_install_method == 'source'
