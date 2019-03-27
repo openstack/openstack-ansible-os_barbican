@@ -15,8 +15,7 @@
 
 cache_timeout: 600
 
-barbican_distro_packages:
-  - git
+barbican_distro_packages: []
 
 barbican_devel_distro_packages:
   - build-essential
