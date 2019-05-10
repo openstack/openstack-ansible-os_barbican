@@ -15,22 +15,8 @@
 - project:
     templates:
       - check-requirements
+      - openstack-ansible-deploy-aio_metal-jobs
+      - openstack-ansible-deploy-aio_distro_metal-jobs
       - openstack-ansible-linters
       - publish-openstack-docs-pti
       - release-notes-jobs-python3
-    check:
-      jobs:
-        - openstack-ansible-deploy-aio_metal_barbican-centos-7
-        - openstack-ansible-deploy-aio_metal_barbican-debian-stable
-        - openstack-ansible-deploy-aio_metal_barbican-ubuntu-bionic
-    gate:
-      jobs:
-        - openstack-ansible-deploy-aio_metal_barbican-centos-7
-        - openstack-ansible-deploy-aio_metal_barbican-debian-stable
-        - openstack-ansible-deploy-aio_metal_barbican-ubuntu-bionic
-    experimental:
-      jobs:
-        - openstack-ansible-deploy-aio_distro_metal_barbican-centos-7
-        - openstack-ansible-deploy-aio_distro_metal_barbican-opensuse-150
-        - openstack-ansible-deploy-aio_distro_metal_barbican-ubuntu-bionic
-        - openstack-ansible-deploy-aio_metal_barbican-opensuse-150
