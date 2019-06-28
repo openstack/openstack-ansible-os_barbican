@@ -17,9 +17,9 @@
   config_template:
     src: "{{ item.source }}"
     dest: "{{ item.destination }}"
-    owner: "{{ barbican_system_user_name }}"
+    owner: "root"
     group: "{{ barbican_system_group_name }}"
-    mode: "0644"
+    mode: "0640"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
