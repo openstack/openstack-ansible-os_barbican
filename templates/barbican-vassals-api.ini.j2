@@ -7,6 +7,6 @@ lazy = true
 vacuum = true
 no-default-app = true
 memory-report = true
-plugins = python
+plugins = {{ (barbican_install_method == 'distro' and (ansible_os_family | lower) == 'debian') | ternary('python3', 'python') }}
 paste = config:/etc/barbican/barbican-api-paste.ini
 add-header = Connection: close
