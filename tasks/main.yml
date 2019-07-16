@@ -73,20 +73,20 @@
     - common-mq
     - barbican-config
 
-- include_tasks: barbican_pre_install.yml
+- import_tasks: barbican_pre_install.yml
   tags:
     - barbican-install
 
-- include_tasks: barbican_install.yml
+- import_tasks: barbican_install.yml
   tags:
     - barbican-install
 
-- include_tasks: barbican_post_install.yml
+- import_tasks: barbican_post_install.yml
   tags:
     - barbican-config
 
 - name: Run the systemd service role
-  include_role:
+  import_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ barbican_system_user_name }}"
@@ -99,26 +99,18 @@
     systemd_BlockIOAccounting: true
     systemd_MemoryAccounting: true
     systemd_TasksAccounting: true
-    systemd_services:
-      - service_name: "{{ service_var.service_name }}"
-        enabled: true
-        execstarts: "{{ service_var.execstarts }}"
-        execreloads: "{{ service_var.execreloads | default([]) }}"
-        config_overrides: "{{ service_var.init_config_overrides }}"
-  with_items: "{{ filtered_barbican_services }}"
-  loop_control:
-    loop_var: service_var
+    systemd_services: "{{ filtered_barbican_services }}"
   tags:
     - barbican-config
     - systemd-service
 
-- include_tasks: barbican_db_sync.yml
+- import_tasks: barbican_db_sync.yml
   when:
     - inventory_hostname == groups['barbican_all'][0]
   tags:
     - barbican-config
 
-- include_tasks: barbican_service_setup.yml
+- import_tasks: barbican_service_setup.yml
   when:
     - inventory_hostname == groups['barbican_all'][0]
   tags:
