@@ -37,3 +37,21 @@ filtered_barbican_services: |-
   {%   endif %}
   {% endfor %}
   {{ services | sort(attribute='start_order') }}
+
+barbican_service_users: |-
+  {% set users = [{
+    'name': barbican_service_user_name,
+    'password': barbican_service_password
+    }]
+  %}
+  {% for role in barbican_default_role_names %}
+  {%   set _ = users.append({'role': role}) %}
+  {% endfor %}
+  {% for user_role in barbican_service_role_names %}
+  {%   set _ = users.append({
+         'name': barbican_service_user_name,
+         'role': user_role
+       })
+  %}
+  {% endfor %}
+  {{ users }}

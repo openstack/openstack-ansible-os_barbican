@@ -110,7 +110,28 @@
   tags:
     - barbican-config
 
-- import_tasks: barbican_service_setup.yml
+- import_tasks: service_setup.yml
+  vars:
+    _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"
+    _service_setup_host: "{{ barbican_service_setup_host }}"
+    _service_setup_host_python_interpreter: "{{ barbican_service_setup_host_python_interpreter }}"
+    _service_project_name: "{{ barbican_service_project_name }}"
+    _service_region: "{{ barbican_service_region }}"
+    _service_users: "{{ barbican_service_users }}"
+    _service_endpoints:
+      - service: "{{ barbican_service_name }}"
+        interface: "public"
+        url: "{{ barbican_service_publicurl }}"
+      - service: "{{ barbican_service_name }}"
+        interface: "internal"
+        url: "{{ barbican_service_internalurl }}"
+      - service: "{{ barbican_service_name }}"
+        interface: "admin"
+        url: "{{ barbican_service_adminurl }}"
+    _service_catalog:
+      - name: "{{ barbican_service_name }}"
+        type: "{{ barbican_service_type }}"
+        description: "{{ barbican_service_description }}"
   when:
     - inventory_hostname == groups['barbican_all'][0]
   tags:
