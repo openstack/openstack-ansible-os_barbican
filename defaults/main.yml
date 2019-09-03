@@ -40,7 +40,6 @@ barbican_system_user_comment: Barbican System User
 barbican_system_user_shell: /bin/false
 barbican_system_user_home: "/var/lib/{{ barbican_system_user_name }}"
 barbican_etc_directory: /etc/barbican
-barbican_vassals_directory: "{{ barbican_etc_directory }}/vassals"
 
 #Barbican services info
 barbican_api_program_name: barbican-api
@@ -54,11 +53,11 @@ barbican_services:
     group: barbican_all
     service_name: barbican
     init_config_overrides: "{{ barbican_init_config_overrides }}"
-    execstarts: >-
-      {{ barbican_uwsgi_bin }}/uwsgi
-      --master
-      --die-on-term
-      --emperor {{ barbican_vassals_directory }}
+    uwsgi_bind_address: "{{ barbican_service_host }}"
+    uwsgi_port: "{{ barbican_service_port }}"
+    uwsgi_overrides: "{{ barbican_uwsgi_init_overrides }}"
+    wsgi_app: True
+    wsgi_name: barbican-wsgi-api
     start_order: 1
 
 ## Service Type and Data
@@ -178,7 +177,6 @@ barbican_pip_packages:
   - PyMySQL
   - python-memcached
   - systemd-python
-  - uwsgi
 barbican_user_pip_packages: []
 
 barbican_optional_oslomsg_amqp1_pip_packages:

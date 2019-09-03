@@ -20,4 +20,3 @@ barbican_package_list: |-
   {% endif %}
   {{ packages }}
 _barbican_bin: "/openstack/venvs/barbican-{{ barbican_venv_tag }}/bin"
-barbican_uwsgi_bin: "{{ _barbican_bin }}"

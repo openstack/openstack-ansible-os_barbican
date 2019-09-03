@@ -32,11 +32,7 @@ barbican_service_distro_packages:
   - python3-pymysql # needed by /usr/bin/barbican-manage db upgrade.
   - python-systemd
   - python3-systemd
-  - uwsgi
-  - uwsgi-plugin-python3
 
 barbican_oslomsg_amqp1_distro_packages:
   - libsasl2-modules
   - sasl2-bin
-
-barbican_uwsgi_bin: '/usr/bin'

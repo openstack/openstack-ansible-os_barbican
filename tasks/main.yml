@@ -110,6 +110,16 @@
   tags:
     - barbican-config
 
+- name: Import uwsgi role
+  import_role:
+    name: uwsgi
+  vars:
+    uwsgi_services: "{{ uwsgi_barbican_services }}"
+    uwsgi_install_method: "{{ barbican_install_method }}"
+  tags:
+    - barbican-config
+    - uwsgi
+
 - import_tasks: service_setup.yml
   vars:
     _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"

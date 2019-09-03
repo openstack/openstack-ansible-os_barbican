@@ -32,12 +32,8 @@ barbican_service_distro_packages:
   - openstack-barbican-retry
   - openstack-barbican-worker
   - python-systemd
-  - uwsgi
-  - uwsgi-python
 
 barbican_oslomsg_amqp1_distro_packages:
   - cyrus-sasl
   - cyrus-sasl-plain
   - cyrus-sasl-digestmd5
-
-barbican_uwsgi_bin: '/usr/sbin'
