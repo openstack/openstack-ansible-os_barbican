@@ -43,16 +43,15 @@ barbican_etc_directory: /etc/barbican
 barbican_vassals_directory: "{{ barbican_etc_directory }}/vassals"
 
 #Barbican services info
-barbican_api_program_name: barbican-api
-barbican_keystone_listener_program_name: barbican-keystone-listener
-barbican_worker_program_name: barbican-worker
-barbican_retry_program_name: barbican-retry
+barbican_keystone_listener_enable: false
+barbican_worker_enable: false
+barbican_retry_enable: false
 
 ## Service Name-Group Mapping
 barbican_services:
-  barbican:
+  barbican-api:
     group: barbican_all
-    service_name: barbican
+    service_name: barbican-api
     init_config_overrides: "{{ barbican_init_config_overrides }}"
     execstarts: >-
       {{ barbican_uwsgi_bin }}/uwsgi
@@ -60,6 +59,27 @@ barbican_services:
       --die-on-term
       --emperor {{ barbican_vassals_directory }}
     start_order: 1
+  barbican-worker:
+    group: barbican_all
+    service_name: barbican-worker
+    init_config_overrides: "{{ barbican_init_config_overrides }}"
+    execstarts: "{{ barbican_bin }}/barbican-worker"
+    condition: "{{ barbican_worker_enable | bool }}"
+    start_order: 2
+  barbican-keystone-listener:
+    group: barbican_all
+    service_name: barbican-keystone-listener
+    init_config_overrides: "{{ barbican_init_config_overrides }}"
+    execstarts: "{{ barbican_bin }}/barbican-keystone-listener"
+    condition: "{{ barbican_keystone_listener_enable | bool }}"
+    start_order: 3
+  barbican-retry:
+    group: barbican_all
+    service_name: barbican-retry
+    init_config_overrides: "{{ barbican_init_config_overrides }}"
+    execstarts: "{{ barbican_bin }}/barbican-retry"
+    condition: "{{ barbican_retry_enable | bool }}"
+    start_order: 4
 
 ## Service Type and Data
 barbican_service_name: barbican
