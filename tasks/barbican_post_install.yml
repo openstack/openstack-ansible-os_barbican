@@ -35,10 +35,6 @@
       destination: "{{ barbican_etc_directory }}/api_audit_map.conf"
       config_overrides: "{{ barbican_api_audit_map_overrides }}"
       config_type: "ini"
-    - source: "barbican-vassals-api.ini.j2"
-      destination: "{{ barbican_etc_directory }}/vassals/barbican-api.ini"
-      config_overrides: "{{ barbican_vassals_api_overrides }}"
-      config_type: "ini"
   notify: Restart barbican services
 
 - name: Implement policy.json if there are overrides configured
