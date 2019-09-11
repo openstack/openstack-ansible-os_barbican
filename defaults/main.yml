@@ -29,6 +29,7 @@ barbican_pip_package_state: "latest"
 
 # Set installation method.
 barbican_install_method: "source"
+barbican_venv_python_executable: "{{ openstack_venv_python_executable | default('python2') }}"
 
 # Toggle keystone authentication for barbican
 barbican_keystone_auth: no
