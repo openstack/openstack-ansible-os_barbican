@@ -95,7 +95,7 @@ barbican_service_role_names:
   - admin
   - creator
 barbican_service_region: RegionOne
-barbican_service_host: "0.0.0.0"
+barbican_service_host: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 barbican_service_port: 9311
 barbican_service_proto: http
 barbican_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(barbican_service_proto) }}"
