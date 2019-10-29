@@ -31,6 +31,6 @@
     experimental:
       jobs:
         - openstack-ansible-deploy-aio_distro_metal_barbican-centos-7
-        - openstack-ansible-deploy-aio_distro_metal_barbican-opensuse-150
+        - openstack-ansible-deploy-aio_distro_metal_barbican-opensuse-15
         - openstack-ansible-deploy-aio_distro_metal_barbican-ubuntu-bionic
-        - openstack-ansible-deploy-aio_metal_barbican-opensuse-150
+        - openstack-ansible-deploy-aio_metal_barbican-opensuse-15
