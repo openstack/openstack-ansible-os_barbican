@@ -113,9 +113,9 @@ barbican_api_audit_map_overrides: {}
 barbican_vassals_api_overrides: {}
 
 ## The git source/branch
-barbican_git_repo: "https://git.openstack.org/openstack/barbican"
+barbican_git_repo: "https://opendev.org/openstack/barbican"
 barbican_git_install_branch: master
-barbican_upper_constraints_url: "{{ requirements_git_url | default('https://git.openstack.org/cgit/openstack/requirements/plain/upper-constraints.txt?h=' ~ requirements_git_install_branch | default('master')) }}"
+barbican_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 barbican_git_constraints:
   - "git+{{ barbican_git_repo }}@{{ barbican_git_install_branch }}#egg=barbican"
   - "--constraint {{ barbican_upper_constraints_url }}"
