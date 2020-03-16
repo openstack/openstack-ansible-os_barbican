@@ -191,11 +191,15 @@ barbican_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ inter
 #barbican_user_ssl_key: <path to cert on ansible deployment host>
 #barbican_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
+# Memcached override
+barbican_memcached_servers: "{{ memcached_servers }}"
+
 # packages required to run the barbican service
 barbican_pip_packages:
   - barbican
   - osprofiler
   - PyMySQL
+  - pymemcache
   - python-memcached
   - systemd-python
 barbican_user_pip_packages: []
