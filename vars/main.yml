@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+_barbican_is_first_play_host: "{{ (barbican_services['barbican-api']['group'] in group_names and inventory_hostname == (groups[barbican_services['barbican-api']['group']] | intersect(ansible_play_hosts)) | first) | bool }}"
+
 #
 # Compile a list of the services on a host based on whether
 # the host is in the host group and the service is enabled.
