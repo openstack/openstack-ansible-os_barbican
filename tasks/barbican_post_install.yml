@@ -35,7 +35,9 @@
       destination: "{{ barbican_etc_directory }}/api_audit_map.conf"
       config_overrides: "{{ barbican_api_audit_map_overrides }}"
       config_type: "ini"
-  notify: Restart barbican services
+  notify:
+    - Restart barbican services
+    - Restart uwsgi services
 
 - name: Implement policy.json if there are overrides configured
   copy:
@@ -43,3 +45,6 @@
     dest: "{{ barbican_etc_directory }}/policy.json"
   when:
     - barbican_policy_overrides != {}
+  notify:
+    - Restart barbican services
+    - Restart uwsgi services
