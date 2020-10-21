@@ -137,6 +137,7 @@ barbican_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('/etc/ssl/certs/ga
 barbican_galera_port: 3306
 
 ## Oslo Messaging
+barbican_ceilometer_enabled: False
 
 # RPC
 barbican_oslomsg_rpc_host_group: "{{ oslomsg_rpc_host_group | default('rabbitmq_all') }}"
