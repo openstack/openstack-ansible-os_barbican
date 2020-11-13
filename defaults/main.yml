@@ -47,6 +47,20 @@ barbican_keystone_listener_enable: false
 barbican_worker_enable: false
 barbican_retry_enable: false
 
+# Variable defines barbican store backends configuration. It supports multibackend scenario
+# in case list length > 1. Then additional key global_default should be present, otherwise
+# first element would be set as global default. For multibackend one backend should be set
+# as global_default: True
+barbican_backends_config:
+  software:
+    secret_store_plugin: store_crypto
+    crypto_plugin: simple_crypto
+
+# Variable defines barbican crypto configuration.
+barbican_plugins_config:
+  simple_crypto_plugin:
+    kek: "{{ barbican_simple_crypto_key | b64encode }}"
+
 ## Service Name-Group Mapping
 barbican_services:
   barbican-api:
