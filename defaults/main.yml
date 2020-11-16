@@ -81,6 +81,16 @@ barbican_services:
     condition: "{{ barbican_retry_enable | bool }}"
     start_order: 4
 
+
+# With `barbican_user_libraries` you can deploy libraries, needed for barbican
+# to interact with third party services like HSM
+#barbican_user_libraries:
+#  - src: /etc/openstack_deploy/barbican/libCryptoki2.so
+#    dest: /opt/barbican/libs/libCryptoki2.so
+#    owner: root
+#    group: "{{ barbican_system_group_name }}"
+barbican_user_libraries: []
+
 ## Service Type and Data
 barbican_service_name: barbican
 barbican_service_user_name: barbican
