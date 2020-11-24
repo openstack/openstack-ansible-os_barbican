@@ -169,13 +169,10 @@ barbican_service_project_domain_id: default
 barbican_service_user_domain_id: default
 barbican_service_project_name: service
 
-# Apache configuration vars
+# uwsgi configuration vars
 barbican_wsgi_processes_max: 16
 barbican_wsgi_processes: "{{ [[(ansible_processor_vcpus//ansible_processor_threads_per_core)|default(1), 1] | max *2, barbican_wsgi_processes_max] | min }}"
 barbican_wsgi_threads: 1
-barbican_apache_log_level: info
-barbican_apache_servertokens: "Prod"
-barbican_apache_serversignature: "Off"
 
 barbican_ssl: false
 barbican_ssl_cert: /etc/ssl/certs/barbican.pem

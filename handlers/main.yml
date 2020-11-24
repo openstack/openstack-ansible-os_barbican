@@ -13,19 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# NOTE (noonedeadpunk): this handler is added to stop old barbican service
-# which was renamed to barbican-api, so that it don't interfer during upgrade.
-# Should be removed after Ussuri release
-- name: Stop obsoleted barbican service
-  systemd:
-    name: barbican
-    state: "stopped"
-    enabled: no
-  failed_when: false
-  listen:
-    - "Restart barbican services"
-    - "venv changed"
-
 - name: Restart barbican services
   systemd:
     name: "{{ item.service_name }}"
