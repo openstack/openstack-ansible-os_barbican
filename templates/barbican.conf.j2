@@ -51,15 +51,34 @@ memcache_secret_key = {{ memcached_encryption_key }}
 
 # ================= Secret Store Plugin ===================
 [secretstore]
-enabled_secretstore_plugins = store_crypto
+{% if barbican_backends_config | length > 1 %}
+enable_multiple_secret_stores = True
+stores_lookup_suffix = {{ barbican_backends_config.keys() | join(',') }}
 
+{%   for section, config in barbican_backends_config.items() %}
+[secretstore:{{ section }}]
+{%     for key, value in config.items() %}
+{{ key }} = {{ value }}
+{%     endfor %}
+{%   endfor %}
+{% else %}
+{% for config in barbican_backends_config.values() %}
+enabled_secretstore_plugins = {{ config['secret_store_plugin'] }}
+
+{%   if 'crypto_plugin' in config %}
 # ================= Crypto plugin ===================
 [crypto]
 enabled_crypto_plugins = simple_crypto
+{%   endif %}
+{% endfor %}
+{% endif %}
 
-[simple_crypto_plugin]
-# the kek should be a 32-byte value which is base64 encoded
-kek = '{{ barbican_simple_crypto_key | b64encode }}'
+{% for section, config in barbican_plugins_config.items() %}
+[{{ section }}]
+{%   for key, value in config.items() %}
+{{ key }} = '{{ value }}'
+{%   endfor %}
+{% endfor %}
 
 [certificate]
 enabled_certificate_plugins = simple_certificate
