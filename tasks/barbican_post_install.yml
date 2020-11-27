@@ -48,3 +48,24 @@
   notify:
     - Restart barbican services
     - Restart uwsgi services
+
+- name: Copy user defined libraries
+  when: barbican_user_libraries | length > 0
+  block:
+    - name: Create library destination directories
+      file:
+        path: "{{ item.dest | dirname }}"
+        state: directory
+        owner: "{{ item.owner | default('root') }}"
+        group: "{{ item.group | default(barbican_system_group_name) }}"
+        mode: "0750"
+      with_items: "{{ barbican_user_libraries }}"
+
+    - name: Place user libraries
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ item.owner | default('root') }}"
+        group: "{{ item.group | default(barbican_system_group_name) }}"
+        mode: "0640"
+      with_items: "{{ barbican_user_libraries }}"
