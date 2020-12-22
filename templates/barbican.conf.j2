@@ -68,7 +68,7 @@ enabled_secretstore_plugins = {{ config['secret_store_plugin'] }}
 {%   if 'crypto_plugin' in config %}
 # ================= Crypto plugin ===================
 [crypto]
-enabled_crypto_plugins = simple_crypto
+enabled_crypto_plugins = {{ config['crypto_plugin'] }}
 {%   endif %}
 {% endfor %}
 {% endif %}
