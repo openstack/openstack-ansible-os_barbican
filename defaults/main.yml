@@ -22,17 +22,16 @@ debug: False
 barbican_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
 barbican_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((barbican_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
 
-# Set the package install state for distribution and pip packages
+# Set the package install state for distribution packages
 # Options are 'present' and 'latest'
-barbican_package_state: "latest"
-barbican_pip_package_state: "latest"
+barbican_package_state: "{{ package_state | default('latest') }}"
 
 # Set installation method.
-barbican_install_method: "source"
+barbican_install_method: "{{ service_install_method | default('source') }}"
 barbican_venv_python_executable: "{{ openstack_venv_python_executable | default('python2') }}"
 
 # Toggle keystone authentication for barbican
-barbican_keystone_auth: no
+barbican_keystone_auth: "{{ (groups['keystone_all'] is defined) and (groups['keystone_all'] | length > 0) }}"
 
 ## System info
 barbican_system_group_name: barbican
@@ -118,7 +117,7 @@ barbican_default_role_names:
 barbican_service_role_names:
   - admin
   - creator
-barbican_service_region: RegionOne
+barbican_service_region: "{{ service_region | default('RegionOne') }}"
 barbican_service_host: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 barbican_service_port: 9311
 barbican_service_proto: http
@@ -128,6 +127,8 @@ barbican_service_internaluri_proto: "{{ openstack_service_internaluri_proto | de
 barbican_service_publicurl: "{{ barbican_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ barbican_service_port }}"
 barbican_service_internalurl: "{{ barbican_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ barbican_service_port }}"
 barbican_service_adminurl: "{{ barbican_service_adminuri_proto }}://{{ internal_lb_vip_address }}:{{ barbican_service_port }}"
+
+barbican_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 
 barbican_init_config_overrides: {}
 barbican_config_overrides: {}
@@ -158,10 +159,10 @@ barbican_galera_database: barbican
 barbican_galera_user: barbican
 barbican_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 barbican_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('/etc/ssl/certs/galera-ca.pem') }}"
-barbican_galera_port: 3306
+barbican_galera_port: "{{ galera_port | default('3306') }}"
 
 ## Oslo Messaging
-barbican_ceilometer_enabled: False
+barbican_ceilometer_enabled: "{{ (groups['ceilometer_all'] is defined) and (groups['ceilometer_all'] | length > 0) }}"
 
 # RPC
 barbican_oslomsg_rpc_host_group: "{{ oslomsg_rpc_host_group | default('rabbitmq_all') }}"

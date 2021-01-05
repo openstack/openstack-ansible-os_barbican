@@ -128,6 +128,7 @@
     _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"
     _service_setup_host: "{{ barbican_service_setup_host }}"
     _service_setup_host_python_interpreter: "{{ barbican_service_setup_host_python_interpreter }}"
+    _service_in_ldap: "{{ barbican_service_in_ldap }}"
     _service_project_name: "{{ barbican_service_project_name }}"
     _service_region: "{{ barbican_service_region }}"
     _service_users: "{{ barbican_service_users }}"
