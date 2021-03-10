@@ -28,7 +28,7 @@ barbican_package_state: "{{ package_state | default('latest') }}"
 
 # Set installation method.
 barbican_install_method: "{{ service_install_method | default('source') }}"
-barbican_venv_python_executable: "{{ openstack_venv_python_executable | default('python2') }}"
+barbican_venv_python_executable: "{{ openstack_venv_python_executable | default('python3') }}"
 
 # Toggle keystone authentication for barbican
 barbican_keystone_auth: "{{ (groups['keystone_all'] is defined) and (groups['keystone_all'] | length > 0) }}"
