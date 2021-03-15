@@ -20,7 +20,7 @@ debug: False
 # for the service setup. The host must already have
 # clouds.yaml properly configured.
 barbican_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-barbican_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((barbican_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+barbican_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((barbican_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
 
 # Set the package install state for distribution packages
 # Options are 'present' and 'latest'
@@ -152,7 +152,7 @@ barbican_bin: "{{ _barbican_bin }}"
 
 # Database vars
 barbican_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-barbican_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((barbican_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+barbican_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((barbican_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
 barbican_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 barbican_galera_database: barbican
 barbican_galera_user: barbican
@@ -196,7 +196,7 @@ barbican_service_project_name: service
 
 # uwsgi configuration vars
 barbican_wsgi_processes_max: 16
-barbican_wsgi_processes: "{{ [[(ansible_processor_vcpus//ansible_processor_threads_per_core)|default(1), 1] | max *2, barbican_wsgi_processes_max] | min }}"
+barbican_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max *2, barbican_wsgi_processes_max] | min }}"
 barbican_wsgi_threads: 1
 
 barbican_ssl: false
