@@ -39,15 +39,27 @@
     - Restart barbican services
     - Restart uwsgi services
 
-- name: Implement policy.json if there are overrides configured
-  copy:
-    content: "{{ barbican_policy_overrides | to_nice_json }}"
-    dest: "{{ barbican_etc_directory }}/policy.json"
+- name: Implement policy.yaml if there are overrides configured
+  config_template:
+    content: "{{ barbican_policy_overrides }}"
+    dest: "{{ barbican_etc_directory }}/policy.yaml"
+    owner: "root"
+    group: "{{ barbican_system_group_name }}"
+    mode: "0640"
+    config_type: yaml
   when:
-    - barbican_policy_overrides != {}
-  notify:
-    - Restart barbican services
-    - Restart uwsgi services
+    - barbican_policy_overrides | length > 0
+  tags:
+    - barbican-policy-override
+
+- name: Remove legacy policy.yaml file
+  file:
+    path: "{{ barbican_etc_directory }}/policy.yaml"
+    state: absent
+  tags:
+    - barbican-policy-override
+  when:
+    - barbican_policy_overrides | length == 0
 
 - name: Copy user defined libraries
   when: barbican_user_libraries | length > 0
