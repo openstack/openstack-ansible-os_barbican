@@ -22,11 +22,11 @@
   listen:
     - "venv changed"
 
-- name: Remove legacy policy.json file
+# NOTE (noonedeadpunk): Remove this task after Xena release
+- name: Remove obsoleted policy.json file
   file:
-    path: "/etc/barbican/policy.json"
+    path: "{{ barbican_etc_directory }}/policy.json"
     state: absent
-  when:
-    - barbican_policy_overrides == {}
   listen:
     - Restart barbican services
+    - venv changed
