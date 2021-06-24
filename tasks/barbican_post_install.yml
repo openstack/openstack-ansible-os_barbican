@@ -81,3 +81,13 @@
         group: "{{ item.group | default(barbican_system_group_name) }}"
         mode: "0640"
       with_items: "{{ barbican_user_libraries }}"
+
+    - name: Symlink user libraries if needed
+      file:
+        src: "{{ item.dest }}"
+        dest: "{{ item.link }}"
+        owner: "{{ item.owner | default('root') }}"
+        group: "{{ item.group | default(barbican_system_group_name) }}"
+        state: link
+        force: yes
+      with_items: "{{ barbican_user_libraries | selectattr('link', 'defined') }}"
