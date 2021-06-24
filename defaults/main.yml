@@ -99,10 +99,14 @@ barbican_services:
 # With `barbican_user_libraries` you can deploy libraries, needed for barbican
 # to interact with third party services like HSM
 #barbican_user_libraries:
-#  - src: /etc/openstack_deploy/barbican/libCryptoki2.so
+#  - src: /etc/openstack_deploy/barbican/libdpod.plugin
 #    dest: /opt/barbican/libs/libCryptoki2.so
 #    owner: root
 #    group: "{{ barbican_system_group_name }}"
+#  - src: /etc/openstack_deploy/barbican/Chrystoki.conf
+#    dest: /opt/barbican/Chrystoki.conf
+#    link: /etc/Chrystoki.conf
+
 barbican_user_libraries: []
 
 ## Service Type and Data
