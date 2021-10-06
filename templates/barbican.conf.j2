@@ -12,7 +12,7 @@ debug = {{ debug }}
 #  communicate back with this service.
 host_href = {{ barbican_service_publicurl }}
 
-sql_connection = mysql+pymysql://{{ barbican_galera_user }}:{{ barbican_galera_password }}@{{ barbican_galera_address }}/{{ barbican_galera_database }}?charset=utf8{% if barbican_galera_use_ssl | bool %}&ssl_ca={{ barbican_galera_ssl_ca_cert }}{% endif %}
+sql_connection = mysql+pymysql://{{ barbican_galera_user }}:{{ barbican_galera_password }}@{{ barbican_galera_address }}/{{ barbican_galera_database }}?charset=utf8{% if barbican_galera_use_ssl | bool %}&ssl_verify_cert=true{% if barbican_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ barbican_galera_ssl_ca_cert }}{% endif %}{% endif %}
 
 # Rabbit and HA configuration:
 ampq_durable_queues = True
