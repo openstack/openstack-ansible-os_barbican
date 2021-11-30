@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Distribute Barbican Config Files
-  config_template:
+  openstack.config_template.config_template:
     src: "{{ item.source }}"
     dest: "{{ item.destination }}"
     owner: "root"
@@ -40,7 +40,7 @@
     - Restart uwsgi services
 
 - name: Implement policy.yaml if there are overrides configured
-  config_template:
+  openstack.config_template.config_template:
     content: "{{ barbican_policy_overrides }}"
     dest: "{{ barbican_etc_directory }}/policy.yaml"
     owner: "root"
