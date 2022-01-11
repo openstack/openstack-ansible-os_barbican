@@ -25,7 +25,6 @@ barbican_devel_distro_packages:
   - libpq-dev
   - libssl-dev
   - libsystemd-dev
-  - python3-dev
 
 barbican_service_distro_packages:
   - python3-barbican

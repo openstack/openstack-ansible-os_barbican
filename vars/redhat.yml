@@ -23,7 +23,6 @@ barbican_devel_distro_packages:
   - libffi-devel
   - openssl-devel
   - postgresql-libs
-  - python36-devel
   - systemd-devel
 
 barbican_service_distro_packages:
