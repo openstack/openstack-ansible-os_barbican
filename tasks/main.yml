@@ -41,7 +41,12 @@
   tags:
     - always
 
-- import_tasks: db_setup.yml
+- include_role:
+    name: openstack.osa.db_setup
+    apply:
+      tags:
+        - common-db
+        - barbican-config
   when:
     - _barbican_is_first_play_host
   vars:
@@ -55,10 +60,14 @@
           - username: "{{ barbican_galera_user }}"
             password: "{{ barbican_galera_password }}"
   tags:
-    - common-db
-    - barbican-config
+    - always
 
-- import_tasks: mq_setup.yml
+- include_role:
+    name: openstack.osa.mq_setup
+    apply:
+      tags:
+        - common-mq
+        - barbican-config
   when:
     - _barbican_is_first_play_host
   vars:
@@ -73,8 +82,7 @@
     _oslomsg_notify_vhost: "{{ barbican_oslomsg_notify_vhost }}"
     _oslomsg_notify_transport: "{{ barbican_oslomsg_notify_transport }}"
   tags:
-    - common-mq
-    - barbican-config
+    - always
 
 - import_tasks: barbican_pre_install.yml
   tags:
@@ -123,7 +131,12 @@
     - barbican-config
     - uwsgi
 
-- import_tasks: service_setup.yml
+- include_role:
+    name: openstack.osa.service_setup
+    apply:
+      tags:
+        - common-service
+        - barbican-config
   vars:
     _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"
     _service_setup_host: "{{ barbican_service_setup_host }}"
@@ -149,7 +162,7 @@
   when:
     - _barbican_is_first_play_host
   tags:
-    - barbican-config
+    - always
 
 - name: Flush handlers
   meta: flush_handlers
