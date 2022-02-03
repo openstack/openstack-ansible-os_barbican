@@ -21,12 +21,3 @@
   with_items: "{{ filtered_barbican_services }}"
   listen:
     - "venv changed"
-
-# NOTE (noonedeadpunk): Remove this task after Xena release
-- name: Remove obsoleted policy.json file
-  file:
-    path: "{{ barbican_etc_directory }}/policy.json"
-    state: absent
-  listen:
-    - Restart barbican services
-    - venv changed
