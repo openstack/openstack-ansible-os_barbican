@@ -149,7 +149,11 @@
     _service_in_ldap: "{{ barbican_service_in_ldap }}"
     _service_project_name: "{{ barbican_service_project_name }}"
     _service_region: "{{ barbican_service_region }}"
-    _service_users: "{{ barbican_service_users }}"
+    _service_users:
+      - name: "{{ barbican_service_user_name }}"
+        password: "{{ barbican_service_password }}"
+        role: "{{ barbican_service_role_names }}"
+      - role: "{{ barbican_default_role_names }}"
     _service_endpoints:
       - service: "{{ barbican_service_name }}"
         interface: "public"

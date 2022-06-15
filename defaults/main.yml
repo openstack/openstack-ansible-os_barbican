@@ -121,6 +121,10 @@ barbican_default_role_names:
 barbican_service_role_names:
   - admin
   - creator
+  - service
+barbican_service_token_roles:
+  - service
+barbican_service_token_roles_required: "{{ openstack_service_token_roles_required | default(True) }}"
 barbican_service_region: "{{ service_region | default('RegionOne') }}"
 barbican_service_host: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 barbican_service_port: 9311
