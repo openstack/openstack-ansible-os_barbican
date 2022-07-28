@@ -118,6 +118,119 @@ to manually generate hmac and mkek keys, that would be stored on HSM.
   # ansible -m command -a "/openstack/venvs/barbican-{{ venv_tag }}/bin/barbican-manage hsm gen_hmac --library-path /opt/libs/64/libCryptoki2.so --passphrase {{ barbican_dpod_co_password }} --slot-id 3 --label thales_hmac_3" barbican_all[0]
   # ansible -m command -a "/openstack/venvs/barbican-{{ venv_tag }}/bin/barbican-manage hsm gen_mkek --library-path /opt/libs/64/libCryptoki2.so --passphrase {{ barbican_dpod_co_password }} --slot-id 3 --label thales_mkek_3" barbican_all[0]
 
+Configuring Barbican with Entrust nShield Connect HSM backend
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example demonstrates a configuration supporting the Entrust
+nShield Connect HSM. Barbican stores HMAC and MKEK keys in the HSM,
+which are used to encrypt and decrypt keys that are stored in Barbican MySQL
+database.
+
+MKEK stands for **Master Key Encryption Key**, which is used to encrypt KEKs
+that are unique and created per project. All keys within a project are
+encrypted with KEK.
+
+Before proceeding, you must install the Security World software provided by
+Entrust. The software will install libraries that will be referenced as
+part of the configuration. In addition, the HSM may utilize one or more slots
+that will also be required to complete the configuration. Please consult
+the `nShield Connect User Guide for Linux <https://nshielddocs.entrust.com/docs/connect-ug/12.80/User_Guide_nShield_Connect_12.80_Linux.pdf>`_
+and/or Entrust support for assistance.
+
+Once the installation is complete, you should know or have:
+
+#. Desired Slot ID
+#. The ``libcknfast.so`` library file
+
+The Slot ID can be determined using the ``pcks11-tool`` as shown here:
+
+ .. code::
+
+  # pkcs11-tool -L --module /opt/nfast/toolkits/pkcs11/libcknfast.so
+  Available slots:
+  Slot 0 (0x1d622495): 6606-XXXX-XXXX Rt2
+    token label        : accelerator
+    token manufacturer : nCipher Corp. Ltd
+    token model        :
+    token flags        : rng, token initialized, other flags=0x200
+    hardware version   : 0.12
+    firmware version   : 12.50
+    serial num         : 6606-XXXX-XXXX
+    pin min/max        : 0/256
+  Slot 1 (0x1d622496): 6606-XXXX-XXXX Rt2 slot 0
+    (token not recognized)
+  Slot 2 (0x1d622497): 6606-XXXX-XXXX Rt2 slot 2
+    (empty)
+  Slot 3 (0x1d622498): 6606-XXXX-XXXX Rt2 slot 3
+    (empty)
+
+The usable slot value is in HEX and must be converted to decimal:
+
+  .. code::
+
+   # echo $((0x1d622495))
+   492971157
+
+Once the nShield-related setup is complete, we can define all required
+variables that are needed for the Barbican deployment. For convenience,
+copy the ``libcknfast.so`` library to ``/etc/openstack_deploy/barbican/``
+on the deploy node. It will be distributed amongst the Barbican service
+nodes accordingly.
+
+Define the following in `user_variables.yml`:
+
+ .. code-block:: yaml
+
+  barbican_backends_config:
+    hsm:
+      secret_store_plugin: store_crypto
+      crypto_plugin: p11_crypto
+
+  barbican_plugins_config:
+    p11_crypto_plugin:
+      library_path: /opt/barbican/libs/libcknfast.so
+      token_serial_number: 12345678
+      login: mypassword123
+      slot_id: 492971157
+      mkek_label: thales_mkek_0
+      mkek_length: 32
+      hmac_label: thales_hmac_0
+      encryption_mechanism: CKM_AES_CBC
+      hmac_key_type: CKK_SHA256_HMAC
+      hmac_keygen_mechanism: CKK_SHA256_HMAC
+
+  barbican_user_libraries:
+    - src: /etc/openstack_deploy/barbican/libcknfast.so
+      dest: /opt/barbican/libs/libcknfast.so
+
+Override variables can be added or modified as needed.
+
+To generate the HMAC key, perform the following command using the
+approrpiate values:
+
+ .. code::
+
+  barbican-manage hsm gen_hmac \
+  --library-path /opt/nfast/toolkits/pkcs11/libcknfast.so \
+  --passphrase mypassword123 --slot-id 492971157 --label thales_hmac_0 \
+  --key-type CKK_SHA256_HMAC \
+  --mechanism CKM_NC_SHA256_HMAC_KEY_GEN
+
+To generate the MKEK key, perform the following command using the
+approrpiate values:
+
+ .. code::
+
+  barbican-manage hsm gen_mkek \
+  --library-path /opt/nfast/toolkits/pkcs11/libcknfast.so \
+  --passphrase mypassword123 --slot-id 492971157 --label thales_mkek_0
+
+Lastly, restart the nCipher service(s) and Barbican API service:
+
+ .. code::
+
+  # /opt/nfast/sbin/init.d-ncipher restart
+  # systemctl restart barbican-api
 
 Configuring Barbican with Vault backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
