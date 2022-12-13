@@ -1,6 +1,7 @@
 [composite:main]
 use = egg:Paste#urlmap
 /: barbican_version
+/healthcheck: healthcheck
 /v1: {{ (barbican_keystone_auth | bool) | ternary('barbican-api-keystone', 'barbican_api') }}
 
 # Use this pipeline for Barbican API - versions no authentication
