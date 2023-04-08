@@ -96,6 +96,26 @@
   tags:
     - barbican-install
 
+- name: Create and install SSL certificates
+  include_role:
+    name: pki
+    tasks_from: main_certs.yml
+    apply:
+      tags:
+        - barbican-config
+        - pki
+  vars:
+    pki_setup_host: "{{ barbican_pki_setup_host }}"
+    pki_dir: "{{ barbican_pki_dir }}"
+    pki_create_certificates: "{{ barbican_user_ssl_cert is not defined and barbican_user_ssl_key is not defined }}"
+    pki_regen_cert: "{{ barbican_pki_regen_cert }}"
+    pki_certificates: "{{ barbican_pki_certificates }}"
+    pki_install_certificates: "{{ barbican_pki_install_certificates }}"
+  when:
+    - barbican_backend_ssl
+  tags:
+    - always
+
 - import_tasks: barbican_post_install.yml
   tags:
     - barbican-config

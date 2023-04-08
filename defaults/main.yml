@@ -72,6 +72,7 @@ barbican_services:
     wsgi_app: True
     wsgi_name: barbican-wsgi-api
     start_order: 1
+    uwsgi_tls: "{{ barbican_backend_ssl | ternary(barbican_uwsgi_tls, {}) }}"
   barbican-worker:
     group: barbican_all
     service_name: barbican-worker
@@ -214,6 +215,9 @@ barbican_service_project_name: service
 barbican_wsgi_processes_max: 16
 barbican_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max *2, barbican_wsgi_processes_max] | min }}"
 barbican_wsgi_threads: 1
+barbican_uwsgi_tls:
+  crt: "{{ barbican_ssl_cert }}"
+  key: "{{ barbican_ssl_key }}"
 
 # Memcached override
 barbican_memcached_servers: "{{ memcached_servers }}"
@@ -232,3 +236,51 @@ barbican_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
 
 barbican_uwsgi_init_overrides: {}
+
+###
+### Backend TLS
+###
+
+# Define if communication between haproxy and service backends should be
+# encrypted with TLS.
+barbican_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
+
+# Storage location for SSL certificate authority
+barbican_pki_dir: "{{ openstack_pki_dir | default('/etc/openstack_deploy/pki') }}"
+
+# Delegated host for operating the certificate authority
+barbican_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
+
+# barbican server certificate
+barbican_pki_keys_path: "{{ barbican_pki_dir ~ '/certs/private/' }}"
+barbican_pki_certs_path: "{{ barbican_pki_dir ~ '/certs/certs/' }}"
+barbican_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
+barbican_pki_regen_cert: ''
+barbican_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+barbican_pki_certificates:
+  - name: "barbican_{{ ansible_facts['hostname'] }}"
+    provider: ownca
+    cn: "{{ ansible_facts['hostname'] }}"
+    san: "{{ barbican_pki_san }}"
+    signed_by: "{{ barbican_pki_intermediate_cert_name }}"
+
+# barbican destination files for SSL certificates
+barbican_ssl_cert: /etc/barbican/barbican.pem
+barbican_ssl_key: /etc/barbican/barbican.key
+
+# Installation details for SSL certificates
+barbican_pki_install_certificates:
+  - src: "{{ barbican_user_ssl_cert | default(barbican_pki_certs_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+    dest: "{{ barbican_ssl_cert }}"
+    owner: "{{ barbican_system_user_name }}"
+    group: "{{ barbican_system_user_name }}"
+    mode: "0644"
+  - src: "{{ barbican_user_ssl_key | default(barbican_pki_keys_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    dest: "{{ barbican_ssl_key }}"
+    owner: "{{ barbican_system_user_name }}"
+    group: "{{ barbican_system_user_name }}"
+    mode: "0600"
+
+# Define user-provided SSL certificates
+#barbican_user_ssl_cert: <path to cert on ansible deployment host>
+#barbican_user_ssl_key: <path to cert on ansible deployment host>
