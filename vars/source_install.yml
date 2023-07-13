@@ -14,7 +14,7 @@
 # limitations under the License.
 
 barbican_package_list: |-
-  {% set packages = (barbican_distro_packages + barbican_devel_distro_packages) %}
+  {% set packages = barbican_distro_packages + barbican_devel_distro_packages %}
   {% if barbican_oslomsg_amqp1_enabled | bool %}
   {%   set _ = packages.extend(barbican_oslomsg_amqp1_distro_packages) %}
   {% endif %}

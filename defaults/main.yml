@@ -20,7 +20,11 @@ debug: False
 # for the service setup. The host must already have
 # clouds.yaml properly configured.
 barbican_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-barbican_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((barbican_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+barbican_service_setup_host_python_interpreter: >-
+  {{
+    openstack_service_setup_host_python_interpreter | default(
+      (barbican_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 
 # Set the package install state for distribution packages
 # Options are 'present' and 'latest'
@@ -41,7 +45,7 @@ barbican_system_user_shell: /bin/false
 barbican_system_user_home: "/var/lib/{{ barbican_system_user_name }}"
 barbican_etc_directory: /etc/barbican
 
-#Barbican services info
+# Barbican services info
 barbican_keystone_listener_enable: false
 barbican_worker_enable: false
 barbican_retry_enable: false
@@ -98,14 +102,14 @@ barbican_services:
 
 # With `barbican_user_libraries` you can deploy libraries, needed for barbican
 # to interact with third party services like HSM
-#barbican_user_libraries:
-#  - src: /etc/openstack_deploy/barbican/libdpod.plugin
-#    dest: /opt/barbican/libs/libCryptoki2.so
-#    owner: root
-#    group: "{{ barbican_system_group_name }}"
-#  - src: /etc/openstack_deploy/barbican/Chrystoki.conf
-#    dest: /opt/barbican/Chrystoki.conf
-#    link: /etc/Chrystoki.conf
+# barbican_user_libraries:
+#   - src: /etc/openstack_deploy/barbican/libdpod.plugin
+#     dest: /opt/barbican/libs/libCryptoki2.so
+#     owner: root
+#     group: "{{ barbican_system_group_name }}"
+#   - src: /etc/openstack_deploy/barbican/Chrystoki.conf
+#     dest: /opt/barbican/Chrystoki.conf
+#     link: /etc/Chrystoki.conf
 
 barbican_user_libraries: []
 
@@ -149,7 +153,8 @@ barbican_vassals_api_overrides: {}
 ## The git source/branch
 barbican_git_repo: "https://opendev.org/openstack/barbican"
 barbican_git_install_branch: master
-barbican_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
+barbican_upper_constraints_url: >-
+  {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
 barbican_git_constraints:
   - "--constraint {{ barbican_upper_constraints_url }}"
 
@@ -161,7 +166,11 @@ barbican_bin: "{{ _barbican_bin }}"
 
 # Database vars
 barbican_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-barbican_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((barbican_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+barbican_db_setup_python_interpreter: >-
+  {{
+    openstack_db_setup_python_interpreter | default(
+      (barbican_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 barbican_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 barbican_galera_database: barbican
 barbican_galera_user: barbican
@@ -213,7 +222,8 @@ barbican_service_project_name: service
 
 # uwsgi configuration vars
 barbican_wsgi_processes_max: 16
-barbican_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max *2, barbican_wsgi_processes_max] | min }}"
+barbican_wsgi_processes: >-
+  {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max * 2, barbican_wsgi_processes_max] | min }}
 barbican_wsgi_threads: 1
 barbican_uwsgi_tls:
   crt: "{{ barbican_ssl_cert }}"
@@ -282,5 +292,5 @@ barbican_pki_install_certificates:
     mode: "0600"
 
 # Define user-provided SSL certificates
-#barbican_user_ssl_cert: <path to cert on ansible deployment host>
-#barbican_user_ssl_key: <path to cert on ansible deployment host>
+# barbican_user_ssl_cert: <path to cert on ansible deployment host>
+# barbican_user_ssl_key: <path to cert on ansible deployment host>

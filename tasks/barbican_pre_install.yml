@@ -33,9 +33,9 @@
   file:
     path: "{{ item.path }}"
     state: "directory"
-    owner: "{{ item.owner |default(barbican_system_user_name) }}"
-    group: "{{ item.group |default(barbican_system_group_name) }}"
-    mode: "{{ item.mode |default('0750') }}"
+    owner: "{{ item.owner | default(barbican_system_user_name) }}"
+    group: "{{ item.group | default(barbican_system_group_name) }}"
+    mode: "{{ item.mode | default('0750') }}"
   with_items:
     - path: "/etc/barbican"
     - path: "{{ barbican_system_user_home }}"
