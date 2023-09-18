@@ -20,14 +20,19 @@ sql_idle_timeout = {{ barbican_db_connection_recycle_time }}
 # Rabbit and HA configuration:
 ampq_durable_queues = True
 rabbit_ha_queues = True
-transport_url = {{ barbican_oslomsg_rpc_transport }}://{% for host in barbican_oslomsg_rpc_servers.split(',') %}{{ barbican_oslomsg_rpc_userid }}:{{ barbican_oslomsg_rpc_password }}@{{ host }}:{{ barbican_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ barbican_oslomsg_rpc_vhost }}{% if barbican_oslomsg_rpc_use_ssl | bool %}?ssl=1&ssl_version={{ barbican_oslomsg_rpc_ssl_version }}&ssl_ca_file={{ barbican_oslomsg_rpc_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+transport_url = {{ barbican_oslomsg_rpc_transport }}://{% for host in barbican_oslomsg_rpc_servers.split(',') %}{{ barbican_oslomsg_rpc_userid }}:{{ barbican_oslomsg_rpc_password }}@{{ host }}:{{ barbican_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ _barbican_oslomsg_rpc_vhost_conf }}{% if barbican_oslomsg_rpc_use_ssl | bool %}?ssl=1&ssl_version={{ barbican_oslomsg_rpc_ssl_version }}&ssl_ca_file={{ barbican_oslomsg_rpc_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
 [oslo_messaging_notifications]
 driver = {{ (barbican_ceilometer_enabled | bool) | ternary('messagingv2', 'noop') }}
-transport_url = {{ barbican_oslomsg_notify_transport }}://{% for host in barbican_oslomsg_notify_servers.split(',') %}{{ barbican_oslomsg_notify_userid }}:{{ barbican_oslomsg_notify_password }}@{{ host }}:{{ barbican_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ barbican_oslomsg_notify_vhost }}{% if barbican_oslomsg_notify_use_ssl | bool %}?ssl=1&ssl_version={{ barbican_oslomsg_notify_ssl_version }}&ssl_ca_file={{ barbican_oslomsg_notify_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+transport_url = {{ barbican_oslomsg_notify_transport }}://{% for host in barbican_oslomsg_notify_servers.split(',') %}{{ barbican_oslomsg_notify_userid }}:{{ barbican_oslomsg_notify_password }}@{{ host }}:{{ barbican_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ _barbican_oslomsg_notify_vhost_conf }}{% if barbican_oslomsg_notify_use_ssl | bool %}?ssl=1&ssl_version={{ barbican_oslomsg_notify_ssl_version }}&ssl_ca_file={{ barbican_oslomsg_notify_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
+{% if barbican_oslomsg_rpc_transport == 'rabbit' %}
 [oslo_messaging_rabbit]
 ssl = {{ barbican_oslomsg_notify_use_ssl | bool }}
+rabbit_quorum_queue = {{ barbican_oslomsg_rabbit_quorum_queues }}
+rabbit_quorum_delivery_limit = {{ barbican_oslomsg_rabbit_quorum_delivery_limit }}
+rabbit_quorum_max_memory_bytes = {{ barbican_oslomsg_rabbit_quorum_max_memory_bytes }}
+{% endif %}
 
 {% if barbican_keystone_auth | bool %}
 [keystone_authtoken]
