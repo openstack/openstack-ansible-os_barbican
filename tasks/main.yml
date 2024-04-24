@@ -89,6 +89,7 @@
     _oslomsg_notify_vhost: "{{ barbican_oslomsg_notify_vhost }}"
     _oslomsg_notify_transport: "{{ barbican_oslomsg_notify_transport }}"
     _oslomsg_notify_policies: "{{ barbican_oslomsg_notify_policies }}"
+    _oslomsg_notify_configure: "{{ barbican_oslomsg_notify_configure }}"
   tags:
     - always
 
