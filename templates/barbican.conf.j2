@@ -30,6 +30,9 @@ transport_url = {{ barbican_oslomsg_notify_transport }}://{% for host in barbica
 [oslo_messaging_rabbit]
 ssl = {{ barbican_oslomsg_notify_use_ssl | bool }}
 rabbit_quorum_queue = {{ barbican_oslomsg_rabbit_quorum_queues }}
+transient_quorum_queue = {{ barbican_oslomsg_rabbit_transient_quorum_queues }}
+use_queue_manager = {{ barbican_oslomsg_rabbit_queue_manager }}
+rabbit_stream_fanout = {{ barbican_oslomsg_rabbit_stream_fanout }}
 rabbit_quorum_delivery_limit = {{ barbican_oslomsg_rabbit_quorum_delivery_limit }}
 rabbit_quorum_max_memory_bytes = {{ barbican_oslomsg_rabbit_quorum_max_memory_bytes }}
 {% endif %}
