@@ -33,6 +33,9 @@ rabbit_quorum_queue = {{ barbican_oslomsg_rabbit_quorum_queues }}
 rabbit_transient_quorum_queue = {{ barbican_oslomsg_rabbit_transient_quorum_queues }}
 rabbit_qos_prefetch_count = {{ barbican_oslomsg_rabbit_qos_prefetch_count }}
 use_queue_manager = {{ barbican_oslomsg_rabbit_queue_manager }}
+{% if barbican_oslomsg_rabbit_queue_manager %}
+hostname = {{ [ansible_facts['hostname'], barbican_service_name] | join('-') }}
+{% endif %}
 rabbit_stream_fanout = {{ barbican_oslomsg_rabbit_stream_fanout }}
 rabbit_quorum_delivery_limit = {{ barbican_oslomsg_rabbit_quorum_delivery_limit }}
 rabbit_quorum_max_memory_bytes = {{ barbican_oslomsg_rabbit_quorum_max_memory_bytes }}
