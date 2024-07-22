@@ -16,7 +16,7 @@
 _barbican_is_first_play_host: >-
   {{
     (barbican_services['barbican-api']['group'] in group_names and
-      inventory_hostname == (groups[barbican_services['barbican-api']['group']] | intersect(ansible_play_hosts)) | first) | bool
+      inventory_hostname == (groups[barbican_services['barbican-api']['group']] | select('in', ansible_play_hosts)) | first) | bool
   }}
 
 _barbican_oslomsg_rpc_vhost_conf: >-
