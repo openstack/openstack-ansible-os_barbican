@@ -47,10 +47,7 @@
     venv_install_destination_path: "{{ barbican_bin | dirname }}"
     venv_install_distro_package_list: "{{ barbican_distro_packages }}"
     venv_pip_install_args: "{{ barbican_pip_install_args }}"
-    venv_pip_packages: >-
-      {{ barbican_pip_packages |
-           union(barbican_user_pip_packages) |
-             union(((barbican_oslomsg_amqp1_enabled | bool) | ternary(barbican_optional_oslomsg_amqp1_pip_packages, []))) }}
+    venv_pip_packages: "{{ barbican_pip_packages | union(barbican_user_pip_packages) }}"
     venv_facts_when_changed:
       - section: "barbican"
         option: "venv_tag"

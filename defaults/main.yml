@@ -229,10 +229,6 @@ barbican_oslomsg_rabbit_queue_manager: "{{ oslomsg_rabbit_queue_manager | defaul
 barbican_oslomsg_rabbit_quorum_delivery_limit: "{{ oslomsg_rabbit_quorum_delivery_limit | default(0) }}"
 barbican_oslomsg_rabbit_quorum_max_memory_bytes: "{{ oslomsg_rabbit_quorum_max_memory_bytes | default(0) }}"
 
-## (Qdrouterd) integration
-# TODO(ansmith): Change structure when more backends will be supported
-barbican_oslomsg_amqp1_enabled: "{{ barbican_oslomsg_rpc_transport == 'amqp' }}"
-
 # Keystone AuthToken/Middleware
 barbican_keystone_auth_plugin: password
 barbican_service_project_domain_id: default
@@ -260,9 +256,6 @@ barbican_pip_packages:
   - python-memcached
   - systemd-python
 barbican_user_pip_packages: []
-
-barbican_optional_oslomsg_amqp1_pip_packages:
-  - oslo.messaging[amqp1]
 
 barbican_uwsgi_init_overrides: {}
 
