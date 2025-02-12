@@ -89,5 +89,5 @@
         owner: "{{ item.owner | default('root') }}"
         group: "{{ item.group | default(barbican_system_group_name) }}"
         state: link
-        force: yes
+        force: true
       with_items: "{{ barbican_user_libraries | selectattr('link', 'defined') }}"

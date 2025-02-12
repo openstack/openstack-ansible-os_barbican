@@ -17,7 +17,7 @@
   systemd:
     name: "{{ item.service_name }}"
     state: "restarted"
-    daemon_reload: yes
+    daemon_reload: true
   with_items: "{{ filtered_barbican_services }}"
   listen:
     - "venv changed"

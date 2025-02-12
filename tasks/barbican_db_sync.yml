@@ -15,6 +15,6 @@
 
 - name: Perform a synchronization of the Barbican database
   command: "{{ barbican_bin }}/barbican-manage db upgrade"
-  become: yes
+  become: true
   become_user: "{{ barbican_system_user_name }}"
   changed_when: false

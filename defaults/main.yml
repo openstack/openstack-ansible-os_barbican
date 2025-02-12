@@ -14,7 +14,7 @@
 # limitations under the License.
 
 ## Verbosity Options
-debug: False
+debug: false
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
@@ -73,7 +73,7 @@ barbican_services:
     uwsgi_bind_address: "{{ barbican_service_host }}"
     uwsgi_port: "{{ barbican_service_port }}"
     uwsgi_overrides: "{{ barbican_uwsgi_init_overrides }}"
-    wsgi_app: True
+    wsgi_app: true
     wsgi_name: barbican-wsgi-api
     start_order: 1
     uwsgi_tls: "{{ barbican_backend_ssl | ternary(barbican_uwsgi_tls, {}) }}"
@@ -98,7 +98,6 @@ barbican_services:
     execstarts: "{{ barbican_bin }}/barbican-retry"
     condition: "{{ barbican_retry_enable | bool }}"
     start_order: 4
-
 
 # With `barbican_user_libraries` you can deploy libraries, needed for barbican
 # to interact with third party services like HSM
@@ -255,6 +254,7 @@ barbican_pip_packages:
   - pymemcache
   - python-memcached
   - systemd-python
+
 barbican_user_pip_packages: []
 
 barbican_uwsgi_init_overrides: {}
@@ -277,7 +277,7 @@ barbican_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
 barbican_pki_keys_path: "{{ barbican_pki_dir ~ '/certs/private/' }}"
 barbican_pki_certs_path: "{{ barbican_pki_dir ~ '/certs/certs/' }}"
 barbican_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
-barbican_pki_regen_cert: ''
+barbican_pki_regen_cert: ""
 barbican_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
 barbican_pki_certificates:
   - name: "barbican_{{ ansible_facts['hostname'] }}"
