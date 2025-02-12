@@ -53,7 +53,7 @@
     - barbican-policy-override
 
 - name: Remove legacy policy.yaml file
-  file:
+  ansible.builtin.file:
     path: "{{ barbican_etc_directory }}/policy.yaml"
     state: absent
   tags:
@@ -65,7 +65,7 @@
   when: barbican_user_libraries | length > 0
   block:
     - name: Create library destination directories
-      file:
+      ansible.builtin.file:
         path: "{{ item.dest | dirname }}"
         state: directory
         owner: "{{ item.owner | default('root') }}"
@@ -74,7 +74,7 @@
       with_items: "{{ barbican_user_libraries }}"
 
     - name: Place user libraries
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: "{{ item.owner | default('root') }}"
@@ -83,7 +83,7 @@
       with_items: "{{ barbican_user_libraries }}"
 
     - name: Symlink user libraries if needed
-      file:
+      ansible.builtin.file:
         src: "{{ item.dest }}"
         dest: "{{ item.link }}"
         owner: "{{ item.owner | default('root') }}"

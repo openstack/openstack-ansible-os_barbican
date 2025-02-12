@@ -14,13 +14,13 @@
 # limitations under the License.
 
 - name: Create the Barbican system group
-  group:
+  ansible.builtin.group:
     name: "{{ barbican_system_group_name }}"
     state: "present"
     system: "yes"
 
 - name: Create the Barbican system user
-  user:
+  ansible.builtin.user:
     name: "{{ barbican_system_user_name }}"
     group: "{{ barbican_system_group_name }}"
     comment: "{{ barbican_system_user_comment }}"
@@ -30,7 +30,7 @@
     home: "{{ barbican_system_user_home }}"
 
 - name: Create Barbican's directories
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: "directory"
     owner: "{{ item.owner | default(barbican_system_user_name) }}"
