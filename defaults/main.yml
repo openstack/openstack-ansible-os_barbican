@@ -74,7 +74,7 @@ barbican_services:
     uwsgi_port: "{{ barbican_service_port }}"
     uwsgi_overrides: "{{ barbican_uwsgi_init_overrides }}"
     wsgi_app: true
-    wsgi_name: barbican-wsgi-api
+    wsgi: "barbican.wsgi.api:application"
     start_order: 1
     uwsgi_tls: "{{ barbican_backend_ssl | ternary(barbican_uwsgi_tls, {}) }}"
   barbican-worker:
