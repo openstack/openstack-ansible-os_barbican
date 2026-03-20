@@ -278,12 +278,14 @@ barbican_pki_keys_path: "{{ barbican_pki_dir ~ '/certs/private/' }}"
 barbican_pki_certs_path: "{{ barbican_pki_dir ~ '/certs/certs/' }}"
 barbican_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
 barbican_pki_regen_cert: ""
-barbican_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+barbican_pki_san: "{{ openstack_pki_san | default({'dns': [ansible_facts['hostname']], 'ip': [management_address]}) }}"
+barbican_pki_backend: "{{ openstack_pki_backend | default('standalone') }}"
 barbican_pki_certificates:
   - name: "barbican_{{ ansible_facts['hostname'] }}"
-    provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
     san: "{{ barbican_pki_san }}"
+    # standalone backend only
+    provider: ownca
     signed_by: "{{ barbican_pki_intermediate_cert_name }}"
 
 # barbican destination files for SSL certificates
@@ -292,17 +294,21 @@ barbican_ssl_key: /etc/barbican/barbican.key
 
 # Installation details for SSL certificates
 barbican_pki_install_certificates:
-  - src: "{{ barbican_user_ssl_cert | default(barbican_pki_certs_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "barbican_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ barbican_ssl_cert }}"
     owner: "{{ barbican_system_user_name }}"
     group: "{{ barbican_system_user_name }}"
-    mode: "0644"
-  - src: "{{ barbican_user_ssl_key | default(barbican_pki_keys_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    # standalone backend only
+    src: "{{ barbican_user_ssl_cert | default(barbican_pki_certs_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "barbican_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ barbican_ssl_key }}"
     owner: "{{ barbican_system_user_name }}"
     group: "{{ barbican_system_user_name }}"
-    mode: "0600"
+    # standalone backend only
+    src: "{{ barbican_user_ssl_key | default(barbican_pki_keys_path ~ 'barbican_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
 
 # Define user-provided SSL certificates
-# barbican_user_ssl_cert: <path to cert on ansible deployment host>
-# barbican_user_ssl_key: <path to cert on ansible deployment host>
+barbican_user_ssl_cert: ""
+barbican_user_ssl_key: ""
