@@ -5,7 +5,7 @@ Barbican role for OpenStack-Ansible
 This Ansible role installs and configures OpenStack barbican.
 
 To clone or view the source code for this repository, visit the role repository
-for `os_barbican <https://github.com/openstack/openstack-ansible-os_barbican>`_.
+for `os_barbican <https://opendev.org/openstack/openstack-ansible-os_barbican>`_.
 
 .. toctree::
    :maxdepth: 2
@@ -57,8 +57,6 @@ Default variables
 Dependencies
 ~~~~~~~~~~~~
 
-This role needs pip >= 7.1 installed on the target host.
-
 This role requires the following variables to be defined:
 
 .. code-block:: yaml
@@ -81,5 +79,5 @@ Tags
 ~~~~
 
 This role supports two tags: ``barbican-install`` and ``barbican-config``. The
-``barbican-install`` tag can be used to install and upgrade. The ``barbican-
-config`` tag can be used to maintain configuration of the service.
+``barbican-install`` tag can be used to install and upgrade. The
+``barbican-config`` tag can be used to maintain configuration of the service.

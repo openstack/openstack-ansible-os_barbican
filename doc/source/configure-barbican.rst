@@ -49,9 +49,9 @@ Barbican by running following playbooks:
 
  .. code::
 
-  # openstack-ansible playbooks/lxc-containers-create.yml --limit lxc_hosts,barbican_all
-  # openstack-ansible playbooks/os-barbican-install.yml
-  # openstack-ansible playbooks/haproxy-install.yml
+  # openstack-ansible openstack.osa.containers_lxc_create --limit lxc_hosts,barbican_all
+  # openstack-ansible openstack.osa.barbican
+  # openstack-ansible openstack.osa.haproxy
 
 
 Configuring Barbican with Thales Luna HSM backend
@@ -112,7 +112,7 @@ and set to the value of Crypto Officer role password.
 We would need to symlink Chrystoki.conf so /etc. Additionally it is required
 to manually generate hmac and mkek keys, that would be stored on HSM.
 
- .. code::
+.. code-block:: console
 
   # ansible -m file -a "src=/opt/barbican/Chrystoki.conf dest=/etc/Chrystoki.conf state=link" barbican_all
   # ansible -m command -a "/openstack/venvs/barbican-{{ venv_tag }}/bin/barbican-manage hsm gen_hmac --library-path /opt/libs/64/libCryptoki2.so --passphrase {{ barbican_dpod_co_password }} --slot-id 3 --label thales_hmac_3" barbican_all[0]
@@ -144,7 +144,7 @@ Once the installation is complete, you should know or have:
 
 The Slot ID can be determined using the ``pcks11-tool`` as shown here:
 
- .. code::
+ .. code-block:: console
 
   # pkcs11-tool -L --module /opt/nfast/toolkits/pkcs11/libcknfast.so
   Available slots:
@@ -166,7 +166,7 @@ The Slot ID can be determined using the ``pcks11-tool`` as shown here:
 
 The usable slot value is in HEX and must be converted to decimal:
 
-  .. code::
+  .. code-block:: console
 
    # echo $((0x1d622495))
    492971157
@@ -177,7 +177,7 @@ copy the ``libcknfast.so`` library to ``/etc/openstack_deploy/barbican/``
 on the deploy node. It will be distributed amongst the Barbican service
 nodes accordingly.
 
-Define the following in `user_variables.yml`:
+Define the following in ``user_variables.yml``:
 
  .. code-block:: yaml
 
@@ -208,7 +208,7 @@ Override variables can be added or modified as needed.
 To generate the HMAC key, perform the following command using the
 approrpiate values:
 
- .. code::
+ .. code-block:: console
 
   barbican-manage hsm gen_hmac \
   --library-path /opt/nfast/toolkits/pkcs11/libcknfast.so \
@@ -219,7 +219,7 @@ approrpiate values:
 To generate the MKEK key, perform the following command using the
 approrpiate values:
 
- .. code::
+ .. code-block:: console
 
   barbican-manage hsm gen_mkek \
   --library-path /opt/nfast/toolkits/pkcs11/libcknfast.so \
@@ -227,7 +227,7 @@ approrpiate values:
 
 Lastly, restart the nCipher service(s) and Barbican API service:
 
- .. code::
+ .. code-block:: console
 
   # /opt/nfast/sbin/init.d-ncipher restart
   # systemctl restart barbican-api
@@ -281,10 +281,10 @@ following overrides is `user_variables.yml`:
 
 After variables are set we need to run roles to re-configure services:
 
- .. code::
+.. code-block:: console
 
-   # openstack-ansible playbooks/os-cinder-install.yml --tags cinder-config
-   # openstack-ansible playbooks/os-nova-install.yml -- tags nova-config
+   # openstack-ansible openstack.osa.cinder --tags cinder-config
+   # openstack-ansible openstack.osa.nova --tags nova-config
 
 
 Connect Barbican to Vault
@@ -318,10 +318,10 @@ least one host in ``barbican_all`` group. So generally it should be enough
 just to re-run service-related roles to get service's config adjusted to
 interact with barbican:
 
-.. code::
+.. code-block:: console
 
-  # openstack-ansible playbooks/os-cinder-install.yml --tags cinder-config
-  # openstack-ansible playbooks/os-nova-install.yml --tags nova-config
+  # openstack-ansible openstack.osa.cinder --tags cinder-config
+  # openstack-ansible openstack.osa.nova --tags nova-config
 
 Then we can make use of barbican, for example, to make LUKS-encrypted volumes.
 You may reference to `Cinder docs <https://docs.openstack.org/cinder/latest/configuration/block-storage/volume-encryption.html#create-an-encrypted-volume-type>`_
