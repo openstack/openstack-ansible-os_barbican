@@ -248,7 +248,7 @@ barbican_memcached_servers: "{{ memcached_servers }}"
 
 # packages required to run the barbican service
 barbican_pip_packages:
-  - "git+{{ barbican_git_repo }}@{{ barbican_git_install_branch }}#egg=barbican"
+  - "barbican@git+{{ barbican_git_repo }}@{{ barbican_git_install_branch }}"
   - osprofiler
   - PyMySQL
   - pymemcache
